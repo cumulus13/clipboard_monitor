@@ -12,6 +12,7 @@ import cmdw
 from pydebugger.debug import debug
 import re
 from configset import configset
+import traceback
 
 class clipmon(object):
 	def __init__(self):
@@ -38,11 +39,15 @@ class clipmon(object):
 		conn = sqlite3.connect(file_db)
 		curs = conn.cursor()
 		CREATE_TABLE = "CREATE TABLE IF NOT EXISTS clips ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'date' DATETIME NOT NULL, 'clip' TEXT)"
-		INSERT_TABLE = "INSERT INTO clips ('date', 'clip') values('{0}', '{1}')"
+		INSERT_TABLE = 'INSERT INTO clips ("date", "clip") values("{0}", "{1}")'
 		curs.execute(CREATE_TABLE)
 		conn.commit()
-		data_insert = INSERT_TABLE.format(self.get_now(), unicode(clip).encode('utf-8'))
-		curs.execute(data_insert)
+		data_insert = INSERT_TABLE.format(self.get_now(), unicode(re.sub('"', "'", clip)).encode('utf-8'))
+		try:
+			curs.execute(data_insert)
+		except:
+			debug(data_insert = data_insert, debug = True)
+			print(traceback.format_exc())
 		conn.commit()
 		
 	def monitor(self, sleep=1, to_db = True, to_text = True):
@@ -68,7 +73,7 @@ class clipmon(object):
 				debug(self_width = self.width)
 				if len(clip) > (self.width - 55):
 					msg = [clip]
-					msg = str(msg)[1:(self.width - 55)][:-1] + " " + make_colors("...", 'lr')
+					msg = str(msg)[1:(self.width - 55)][:-1] + " " + make_colors("...", 'lr') + " LEN:" + make_colors(len(clip), 'lg')
 				print(make_colors(self.get_now(), 'lw', 'bl') + " - " + make_colors("Clipboard Changed !", 'lw', 'lr') + " --> " + make_colors(msg, 'ly'))
 				self.notify.notify("Clipboard Monitor", "Clipboard Changed", "Clipboard Monitor", "changed", host = None, port = None, timeout = None, icon = None, pushbullet_api = None, nmd_api = None, growl = True, pushbullet = False, nmd = False)
 			else:
