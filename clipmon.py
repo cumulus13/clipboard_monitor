@@ -27,7 +27,7 @@ class clipmon(object):
 	def save_to_text(self, clip):
 		file_clip = os.path.join(os.path.dirname(__file__), 'clips.txt')
 		with open(file_clip, 'wb') as f:
-			f.write(unicode(clip).encode('utf-8'))
+			f.write(self.get_now() + " --- " + unicode(clip).encode('utf-8'))
 			f.write("\n")
 		return file_clip
 	
@@ -40,10 +40,10 @@ class clipmon(object):
 		CREATE_TABLE = "CREATE TABLE IF NOT EXISTS clips ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'date' DATETIME NOT NULL, 'clip' TEXT)"
 		INSERT_TABLE = "INSERT INTO clips ('date', 'clip') values('{0}', '{1}')"
 		curs.execute(CREATE_TABLE)
-		curs.commit()
+		conn.commit()
 		data_insert = INSERT_TABLE.format(self.get_now(), unicode(clip).encode('utf-8'))
-		curs.execute(INSERT_TABLE)
-		curs.commit()
+		curs.execute(data_insert)
+		conn.commit()
 		
 	def monitor(self, sleep=1, to_db = True, to_text = True):
 		if self.config.get_config('sleep', 'time'):
