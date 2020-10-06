@@ -73,8 +73,9 @@ class clipmon(object):
 				debug(self_width = self.width)
 				if len(clip) > (self.width - 55):
 					msg = [clip]
-					msg = str(msg)[1:(self.width - 55)][:-1] + " " + make_colors("...", 'lr')
-				print(make_colors(self.get_now(), 'lw', 'bl') + " - " + make_colors("Clipboard Changed !", 'lw', 'lr') + " --> " + " LEN:" + make_colors(len(clip), 'lg'))
+					msg = str(msg)[1:(self.width - 55)][:-1] + " " + make_colors("...", 'lr') + " LEN:" + make_colors(len(clip), 'lg')
+				print(make_colors(self.get_now(), 'lw', 'bl') + " - " + make_colors("Clipboard Changed !", 'lw', 'lr') + " --> " + make_colors(msg, 'ly'))
+
 				self.notify.notify("Clipboard Monitor", "Clipboard Changed", "Clipboard Monitor", "changed", host = None, port = None, timeout = None, icon = None, pushbullet_api = None, nmd_api = None, growl = True, pushbullet = False, nmd = False)
 			else:
 				pass
