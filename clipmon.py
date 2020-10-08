@@ -88,6 +88,22 @@ class clipmon(object):
 				pass
 			time.sleep(sleep)
 
+	def show_last(self, n = 1):
+		file_clip = os.path.join(os.path.dirname(__file__), 'clips.txt')
+		data = ''
+		if os.path.isfile(file_clip):
+			with open(file_clip, 'rb') as f:
+				clip = f.readlines()[-n:]
+				debug(clip = clip)
+				for i in clip:
+					data = re.split('^\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}\.\d{0,8}|\n', i)
+					dd = re.findall('^\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}\.\d{0,8}', i)
+					dd = filter(None, dd)
+					data = filter(None, data)
+					# print("dd =", dd)
+					# print("data =", data)
+					print(make_colors(dd[0], 'lw', 'bl') + make_colors(data[0], 'ly'))
+
 	def get_last(self, n = 1):
 		file_clip = os.path.join(os.path.dirname(__file__), 'clips.txt')
 		data = ''
@@ -105,15 +121,17 @@ class clipmon(object):
 							data = " - ".join(clip[1:])
 					elif len(clip) == 2:
 						data = clip[1]
+
 		if data:
 			print(make_colors("Copy clip to clipboard !", 'lw', 'bl', ['blink']))
 			clipboard.copy(data)
 		else:
-			print(make_colors("Clip ERROR !", 'lw', 'lw', ['blink']))
+			print(make_colors("Clip ERROR !", 'lw', 'lr', ['blink']))
 
 	def usage(self):
 		parser = argparse.ArgumentParser(formatter_class = argparse.RawTextHelpFormatter)
 		parser.add_argument('-g', '--get', action='store', help = 'Get Last clipboard of n from end', type=int)
+		parser.add_argument('-s', '--show', action='store', help = 'Show Last clipboard of from n end', type=int)
 		parser.add_argument('-nd', '--no-db', action = 'store_false', help = 'Dont save clip to Database')
 		parser.add_argument('-nt', '--no-text', action = 'store_false', help = 'Dont save clip to text')
 		parser.add_argument('-t', '--time', action='store', help='time to sleep second, default 1 second', type=int, default = 1)
@@ -123,6 +141,8 @@ class clipmon(object):
 			args = parser.parse_args()
 			if args.get:
 				self.get_last(args.get)
+			elif args.show:
+				self.show_last(args.show)
 			else:
 				self.monitor(args.time, args.no_db, args.no_text)
 			
