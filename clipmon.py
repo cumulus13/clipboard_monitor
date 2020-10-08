@@ -102,7 +102,10 @@ class clipmon(object):
 					data = filter(None, data)
 					# print("dd =", dd)
 					# print("data =", data)
-					print(make_colors(dd[0], 'lw', 'bl') + make_colors(data[0], 'ly'))
+					if dd:
+						print(make_colors(dd[0], 'lw', 'bl') + make_colors(data[0], 'ly'))
+					else:
+						print(make_colors(data[0], 'ly'))
 
 	def get_last(self, n = 1):
 		file_clip = os.path.join(os.path.dirname(__file__), 'clips.txt')
