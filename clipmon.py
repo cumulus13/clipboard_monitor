@@ -13,6 +13,7 @@ from pydebugger.debug import debug
 import re
 from configset import configset
 import traceback
+import argparse
 
 class clipmon(object):
 	def __init__(self):
@@ -86,7 +87,46 @@ class clipmon(object):
 			else:
 				pass
 			time.sleep(sleep)
+
+	def get_last(self, n = 1):
+		file_clip = os.path.join(os.path.dirname(__file__), 'clips.txt')
+		data = ''
+		if os.path.isfile(file_clip):
+			with open(file_clip, 'rb') as f:
+				clip = f.readlines()[-n]
+				debug(clip = clip)
+				if clip:
+					clip = re.split('^\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}\.\d{0,8} --- |\n', clip)
+					debug(clip = clip)
+					if len(clip) > 2:
+						if clip[2] == '':
+							data = clip[1]
+						else:
+							data = " - ".join(clip[1:])
+					elif len(clip) == 2:
+						data = clip[1]
+		if data:
+			print(make_colors("Copy clip to clipboard !", 'lw', 'bl', ['blink']))
+			clipboard.copy(data)
+		else:
+			print(make_colors("Clip ERROR !", 'lw', 'lw', ['blink']))
+
+	def usage(self):
+		parser = argparse.ArgumentParser(formatter_class = argparse.RawTextHelpFormatter)
+		parser.add_argument('-g', '--get', action='store', help = 'Get Last clipboard of n from end', type=int)
+		parser.add_argument('-nd', '--no-db', action = 'store_false', help = 'Dont save clip to Database')
+		parser.add_argument('-nt', '--no-text', action = 'store_false', help = 'Dont save clip to text')
+		parser.add_argument('-t', '--time', action='store', help='time to sleep second, default 1 second', type=int, default = 1)
+		if len(sys.argv) == 1:
+			parser.print_help()
+		else:
+			args = parser.parse_args()
+			if args.get:
+				self.get_last(args.get)
+			else:
+				self.monitor(args.time, args.no_db, args.no_text)
 			
 if __name__ == '__main__':
 	c = clipmon()
-	c.monitor()
+	# c.monitor()
+	c.usage()
