@@ -141,6 +141,7 @@ class clipmon(object):
 		parser.add_argument('-t', '--time', action='store', help='time to sleep second, default 1 second', type=int, default = 1)
 		if len(sys.argv) == 1:
 			parser.print_help()
+			self.monitor()
 		else:
 			args = parser.parse_args()
 			if args.get:
