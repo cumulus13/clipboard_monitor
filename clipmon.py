@@ -83,7 +83,8 @@ class clipmon(object):
 				msg = make_colors("...", 'lr') + " PID:" + make_colors(str(os.getpid()), 'ly') + " LEN:" + make_colors(len(clip), 'lg')
 				print(make_colors(self.get_now(), 'lw', 'bl') + " - " + make_colors("Clipboard Changed !", 'lw', 'lr') + " --> " + make_colors(msg, 'ly'))
 
-				self.notify.notify("Clipboard Monitor", "Clipboard Changed", "Clipboard Monitor", "changed", host = None, port = None, timeout = None, iconpath = 'clips.png', pushbullet_api = None, nmd_api = None, growl = True, pushbullet = False, nmd = False)
+				iconpath = os.path.join(os.path.dirname(__file__), 'clips.png')
+				self.notify.notify("Clipboard Monitor", "Clipboard Changed", "Clipboard Monitor", "changed", host = None, port = None, timeout = None, iconpath = iconpath, pushbullet_api = None, nmd_api = None, growl = True, pushbullet = False, nmd = False)
 			else:
 				pass
 			time.sleep(sleep)
