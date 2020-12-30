@@ -14,7 +14,7 @@ import re
 from configset import configset
 import traceback
 import argparse
-from safeprint import print_function
+from safeprint import print_function, print as sprint
 
 class clipmon(object):
     def __init__(self):
@@ -183,7 +183,10 @@ class clipmon(object):
                         number = "0" + str(number)
                     elif len(str(length)) == 2 and len(str(number)) == 1:
                         number = "0" + str(number)
-                print(str(number) + ".",  i[0])
+                try:
+                    print(str(number) + ".",  i[0])
+                except:
+                    sprint(str(number) + ".",  i[0])
                 n+=1
             q = raw_input("Select Number: ")
             if not q:
