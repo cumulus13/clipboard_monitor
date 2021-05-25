@@ -5,7 +5,7 @@ import time
 import sys
 import os
 import clipboard
-from notify import notify
+from xnotify.notify import notify
 from make_colors import make_colors
 from datetime import datetime
 import cmdw
